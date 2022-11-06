@@ -14,9 +14,9 @@ else
 fi
 
 # Add "dtoverlay=dwc2" to `/boot/config.txt` if not existe
-grep --quiet "^dtoverlay=dwc2$" /boot/config.txt
+grep --quiet "^dtoverlay=dwc2$" /boot/config-5.15.63-sunxi
 if [ $? -eq 1 ]; then
-    echo "dtoverlay=dwc2" | sudo tee -a /boot/config.txt
+    echo "dtoverlay=dwc2" | sudo tee -a /boot/config-5.15.63-sunxi
 fi
 # Add "dwc2" to `/etc/modules` if not existe
 grep --quiet "^dwc2$" /etc/modules

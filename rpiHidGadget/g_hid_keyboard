@@ -1,30 +1,34 @@
 #!/bin/bash
 
-sleep 10
+GADGET_DIR_NAME=g_hid_keyboard
 
-cd /sys/kernel/config/usb_gadget/
-mkdir -p g_rpi_hid_keyboard
-cd g_rpi_hid_keyboard
+modprobe libcomposite
+
+# mount <srcDev> <destDir> -t <types>
+mount none cfg -t configfs
+
+mkdir cfg/usb_gadget/$GADGET_DIR_NAME
+
+cd cfg/usb_gadget/$GADGET_DIR_NAME
+
 
 # Define USB specification
 echo 0x1d6b > idVendor # Linux Foundation
 echo 0x0104 > idProduct # Multifunction Composite Virtual keyboard Gadget
-echo 0x0100 > bcdDevice # v1.0.0
-echo 0x0200 > bcdUSB # USB2
-echo 0x00 > bDeviceClass
-echo 0x00 > bDeviceSubClass
-echo 0x00 > bDeviceProtocol
+
+# echo 0x0100 > bcdDevice # v1.0.0 | default value 0x0504
+# echo 0x0200 > bcdUSB # USB2
 
 # Define strings
-mkdir -p strings/0x409
+mkdir strings/0x409
 echo "6633663366" > strings/0x409/serialnumber
 echo "Raspberry Pi" > strings/0x409/manufacturer
 echo "RaspberryPi Virtual keyboard" > strings/0x409/product
 
 # Define the functions of the device
-mkdir -p functions/hid.usb0
-echo 0 > functions/hid.usb0/subclass
-echo 1 > functions/hid.usb0/protocol
+mkdir functions/hid.usb0 # <function>.<usbPort> (e.g. `rndis.usb0` is `f_rndis.c`)
+echo 0 > functions/hid.usb0/subclass # 0: ?, 1: keyboard
+echo 1 > functions/hid.usb0/protocol # Boot interface subclass
 echo 8 > functions/hid.usb0/report_length
 # echo 63 > functions/hid.usb0/report_desc_length
 
@@ -32,12 +36,12 @@ echo 8 > functions/hid.usb0/report_length
 echo "05010906A101050719e029e71500250175019508810295017508810395057501050819012905910295017503910395067508150025650507190029658100C0" | xxd -r -ps > functions/hid.usb0/report_desc
 
 # Create configuration file
-mkdir -p configs/c.1
-echo 0x80 > configs/c.1/bmAttributes
+mkdir configs/c.1
+echo 0x80 > configs/c.1/bmAttributes # 80 : ?
 echo 100 > configs/c.1/MaxPower # 100 mA
 
 # Define configuration strings
-mkdir -p configs/c.1/strings/0x409
+mkdir configs/c.1/strings/0x409
 echo "RaspberryPi Virtual keyboard Configuration" > configs/c.1/strings/0x409/configuration
 
 # Link the configuration file
