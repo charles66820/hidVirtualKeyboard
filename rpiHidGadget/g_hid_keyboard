@@ -48,6 +48,6 @@ echo "RaspberryPi Virtual keyboard Configuration" > configs/c.1/strings/0x409/co
 ln -s functions/hid.usb0 configs/c.1
 
 # Activate device
-ls /sys/class/udc > UDC
+ls /sys/class/udc > UDC # Attach the gadget device to the kernel UDC driver.
 
 sleep 10
