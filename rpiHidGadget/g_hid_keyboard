@@ -1,5 +1,7 @@
 #!/bin/bash
 
+USB_FUNCTION=hid.usb0
+CONFIG_NB=1
 GADGET_DIR_NAME=g_hid_keyboard
 
 modprobe libcomposite
@@ -28,26 +30,26 @@ echo "Raspberry Pi" > strings/0x409/manufacturer
 echo "RaspberryPi Virtual keyboard" > strings/0x409/product
 
 # Define the functions of the device
-mkdir functions/hid.usb0 # <function>.<usbPort> (e.g. `rndis.usb0` is `f_rndis.c`)
-echo 0 > functions/hid.usb0/subclass # 0: ?, 1: keyboard
-echo 1 > functions/hid.usb0/protocol # Boot interface subclass
-echo 8 > functions/hid.usb0/report_length
-# echo 63 > functions/hid.usb0/report_desc_length
+mkdir functions/$USB_FUNCTION # <function>.<usbPort> (e.g. `rndis.usb0` is `f_rndis.c`)
+echo 0 > functions/$USB_FUNCTION/subclass # 0: ?, 1: keyboard
+echo 1 > functions/$USB_FUNCTION/protocol # Boot interface subclass
+echo 8 > functions/$USB_FUNCTION/report_length
+# echo 63 > functions/$USB_FUNCTION/report_desc_length
 
 # Write report descriptor from report_desc attribut in hidg_func_descriptor struct
-echo "05010906A101050719e029e71500250175019508810295017508810395057501050819012905910295017503910395067508150025650507190029658100C0" | xxd -r -ps > functions/hid.usb0/report_desc
+echo "05010906A101050719e029e71500250175019508810295017508810395057501050819012905910295017503910395067508150025650507190029658100C0" | xxd -r -ps > functions/$USB_FUNCTION/report_desc
 
 # Create configuration file
-mkdir configs/c.1
-echo 0x80 > configs/c.1/bmAttributes # 80 : ?
-echo 100 > configs/c.1/MaxPower # 100 mA
+mkdir configs/c.$CONFIG_NB
+echo 0x80 > configs/c.$CONFIG_NB/bmAttributes # 80 : ?
+echo 100 > configs/c.$CONFIG_NB/MaxPower # 100 mA
 
 # Define configuration strings
-mkdir configs/c.1/strings/0x409
-echo "RaspberryPi Virtual keyboard Configuration" > configs/c.1/strings/0x409/configuration
+mkdir configs/c.$CONFIG_NB/strings/0x409
+echo "RaspberryPi Virtual keyboard Configuration" > configs/c.$CONFIG_NB/strings/0x409/configuration
 
 # Link the configuration file
-ln -s functions/hid.usb0 configs/c.1
+ln -s functions/$USB_FUNCTION configs/c.$CONFIG_NB
 
 # Activate device
 ls /sys/class/udc > UDC # Attach the gadget device to the kernel UDC driver.

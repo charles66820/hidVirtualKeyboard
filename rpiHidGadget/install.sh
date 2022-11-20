@@ -2,21 +2,21 @@
 
 RULE_NAME='rpi_device.rules'
 
-USB_GADGET_NAME='g_rpi_hid_keyboard'
+USB_GADGET_NAME='g_hid_keyboard'
 
-KERNEL_VERSION=$(uname -r | egrep -o '^[^-+]+')
-if [ $KERNEL_VERSION = "5.10.11" ]; then
-    echo "Kernel version is already setup"
-else
-    sudo apt update
-    sudo SKIP_WARNING=1 rpi-update 43998c82a7e88df284b7aa30221b2d0d21b2b86a -y
-    echo "Kernel version is successfully downgraded to 5.10.11"
-fi
+# KERNEL_VERSION=$(uname -r | egrep -o '^[^-+]+')
+# if [ $KERNEL_VERSION = "5.10.11" ]; then
+#     echo "Kernel version is already setup"
+# else
+#     sudo apt update
+#     sudo SKIP_WARNING=1 rpi-update 43998c82a7e88df284b7aa30221b2d0d21b2b86a -y
+#     echo "Kernel version is successfully downgraded to 5.10.11"
+# fi
 
 # Add "dtoverlay=dwc2" to `/boot/config.txt` if not existe
-grep --quiet "^dtoverlay=dwc2$" /boot/config-5.15.63-sunxi
+grep --quiet "^dtoverlay=dwc2$" /boot/config-`uname -r`
 if [ $? -eq 1 ]; then
-    echo "dtoverlay=dwc2" | sudo tee -a /boot/config-5.15.63-sunxi
+    echo "dtoverlay=dwc2" | sudo tee -a /boot/config-`uname -r`
 fi
 # Add "dwc2" to `/etc/modules` if not existe
 grep --quiet "^dwc2$" /etc/modules

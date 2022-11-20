@@ -60,6 +60,19 @@ static struct options kval[] = {
 	{.opt = "--kp-enter",	.val = 0x58},
 	{.opt = "--up",		.val = 0x52},
 	{.opt = "--num-lock",	.val = 0x53},
+	{.opt = "1",	.val = 0x1e},
+	{.opt = "2",	.val = 0x1f},
+	{.opt = "3",	.val = 0x20},
+	{.opt = "4",	.val = 0x21},
+	{.opt = "5",	.val = 0x22},
+	{.opt = "6",	.val = 0x23},
+	{.opt = "7",	.val = 0x24},
+	{.opt = "8",	.val = 0x25},
+	{.opt = "9",	.val = 0x26},
+	{.opt = "0",	.val = 0x27},
+	{.opt = "enter",	.val = 0x28},
+	{.opt = "escape",	.val = 0x29},
+	{.opt = "space",	.val = 0x2c},
 	{.opt = NULL}
 };
 
@@ -266,7 +279,7 @@ int main(int argc, const char *argv[])
 		return 3;
 	}
 
-	print_options(argv[2][0]);
+	//print_options(argv[2][0]);
 
 	while (42) {
 
