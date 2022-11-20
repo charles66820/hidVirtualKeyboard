@@ -34,8 +34,9 @@ echo "Successfully loaded the USB gadget drivers."
 
 chmod +x ${USB_GADGET_NAME}
 sudo cp ${USB_GADGET_NAME} /usr/bin/
-# Insert line in /etc/rc.local, if needed
+# remove row that contain /usr/bin/
 sudo sed -i '/\/usr\/bin\//d' /etc/rc.local
+# insert `/usr/bin/${USB_GADGET_NAME}` before `exit 0` in /etc/rc.local
 sudo sed -i '/^exit 0/i \/usr/bin/'${USB_GADGET_NAME} /etc/rc.local
 echo "Successfully installed gadget descriptor."
 
