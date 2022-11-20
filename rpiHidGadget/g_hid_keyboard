@@ -4,6 +4,8 @@ GADGET_DIR_NAME=g_hid_keyboard
 
 modprobe libcomposite
 
+mkdir cfg
+
 # mount <srcDev> <destDir> -t <types>
 mount none cfg -t configfs
 
